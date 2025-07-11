@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu de Play</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .menu {
+            text-align: center;
+        }
+
+        .menu h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+        }
+
+        .menu button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background-color: #00b894;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu button:hover {
+            background-color: #019875;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <h1>Bem-vindo ao Jogo</h1>
+        <button onclick="startGame()">Play</button>
+    </div>
+
+    <script>
+        function startGame() {
+            alert("O jogo vai começar!");
+            // Aqui você pode redirecionar ou iniciar o jogo
+            // Exemplo: window.location.href = "jogo.html";
+        }
+    </script>
+</body>
+</html>
