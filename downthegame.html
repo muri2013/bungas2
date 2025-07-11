@@ -1,1 +1,124 @@
-maneiro 123
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>FlapBird</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #70c5ce;
+      font-family: sans-serif;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      background: #70c5ce;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="320" height="480"></canvas>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let frames = 0;
+    const gravity = 0.25;
+    const jump = 4.6;
+
+    const bird = {
+      x: 50,
+      y: 150,
+      width: 34,
+      height: 24,
+      velocity: 0,
+      draw() {
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+      },
+      update() {
+        this.velocity += gravity;
+        this.y += this.velocity;
+
+        if (this.y + this.height >= canvas.height) {
+          this.y = canvas.height - this.height;
+          this.velocity = 0;
+        }
+      },
+      flap() {
+        this.velocity = -jump;
+      }
+    };
+
+    const pipes = {
+      list: [],
+      width: 52,
+      height: 300,
+      gap: 100,
+      frameInterval: 90,
+      update() {
+        if (frames % this.frameInterval === 0) {
+          const topHeight = Math.floor(Math.random() * 200) + 50;
+          this.list.push({
+            x: canvas.width,
+            top: topHeight,
+            bottom: topHeight + this.gap
+          });
+        }
+
+        for (let i = 0; i < this.list.length; i++) {
+          const p = this.list[i];
+          p.x -= 2;
+
+          // colisão
+          if (
+            bird.x < p.x + this.width &&
+            bird.x + bird.width > p.x &&
+            (bird.y < p.top || bird.y + bird.height > p.bottom)
+          ) {
+            alert("Game Over!");
+            document.location.reload();
+          }
+
+          // remove canos fora da tela
+          if (p.x + this.width < 0) {
+            this.list.shift();
+          }
+        }
+      },
+      draw() {
+        ctx.fillStyle = "green";
+        for (let i = 0; i < this.list.length; i++) {
+          const p = this.list[i];
+          ctx.fillRect(p.x, 0, this.width, p.top);
+          ctx.fillRect(p.x, p.bottom, this.width, canvas.height - p.bottom);
+        }
+      }
+    };
+
+    function loop() {
+      frames++;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      bird.update();
+      pipes.update();
+
+      bird.draw();
+      pipes.draw();
+
+      requestAnimationFrame(loop);
+    }
+
+    document.addEventListener("keydown", function (e) {
+      if (e.code === "Space") bird.flap();
+    });
+
+    loop();
+  </script>
+</body>
+</html>
+
+
