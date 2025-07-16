@@ -2,12 +2,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>DOWN THE GAME</title>
+  <title>Down Fighter Maneiro</title>
   <style>
     body {
       margin: 0;
       background: #222;
-      color: purple;
+      color: white;
       font-family: sans-serif;
       text-align: center;
     }
@@ -19,6 +19,7 @@
       border: 3px solid white;
     }
 
+    h1, h2 {
     h1, h2, h3 {
       margin: 10px;
     }
@@ -26,6 +27,7 @@
 </head>
 <body>
   <h1>Pontuação: <span id="score">0</span></h1>
+  <h2>Tempo: <span id="tempo">30</span>s</h2>
   <h2>Tempo: <span id="tempo">20</span>s</h2>
   <h3>Fase: <span id="fase">1</span></h3>
 
@@ -39,19 +41,16 @@
     const faseEl = document.getElementById("fase");
 
     let score = 0;
+    let tempo = 30; // Tempo inicial em segundos
+    const numPessoas = 5;
     let fase = 1;
     let tempo = 20; // tempo inicial
     let numPessoas = 5;
     const pessoas = [];
 
-    const larguraAreaPessoas = 450; // área que pessoas podem aparecer (esquerda)
-    const tamanhoPessoa = 60;
-
     const imagemPessoa = new Image();
+    imagemPessoa.src = "pessoa.png"; // coloca essa imagem na mesma pasta do index.html
     imagemPessoa.src = "pessoa.png";
-
-    const Donw.png = new Image();
-    spriteGrande.src = "DONW.png"; // a sprite maior que fica fixa no lado direito (150x400, por ex)
 
     let jogoAtivo = true;
     let timer;
@@ -60,28 +59,18 @@
       pessoas.length = 0;
       for (let i = 0; i < numPessoas; i++) {
         pessoas.push({
-          x: Math.random() * (larguraAreaPessoas - tamanhoPessoa),
-          y: Math.random() * (canvas.height - tamanhoPessoa),
-          size: tamanhoPessoa
+          x: Math.random() * (canvas.width - 60),
+          y: Math.random() * (canvas.height - 60),
+          size: 60
         });
       }
     }
 
-    function desenhar() {
+    function desenharPessoas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Desenha pessoas na área esquerda
       for (let p of pessoas) {
         ctx.drawImage(imagemPessoa, p.x, p.y, p.size, p.size);
       }
-
-      // Desenha sprite grande fixa na direita
-      const spriteX = larguraAreaPessoas; // 450px
-      const spriteY = 0;
-      const spriteWidth = canvas.width - larguraAreaPessoas; // 150px
-      const spriteHeight = canvas.height; // 400px
-
-      ctx.drawImage(spriteGrande, spriteX, spriteY, spriteWidth, spriteHeight);
     }
 
     canvas.addEventListener("click", function(e) {
@@ -90,9 +79,6 @@
       const rect = canvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-
-      // Só conta clique se for na área das pessoas (esquerda)
-      if (x > larguraAreaPessoas) return;
 
       for (let i = 0; i < pessoas.length; i++) {
         const p = pessoas[i];
@@ -104,6 +90,7 @@
         ) {
           score++;
           scoreEl.textContent = score;
+          pessoas.splice(i, 1); // remove a pessoa clicada
           pessoas.splice(i, 1);
           break;
         }
@@ -115,13 +102,13 @@
 
         numPessoas += 2;
 
-        tempo = 20; // reseta tempo
+        tempo = 20; // reseta o tempo pra 20 segundos
         tempoEl.textContent = tempo;
 
         gerarPessoas();
       }
 
-      desenhar();
+      desenharPessoas();
     });
 
     function atualizarTempo() {
@@ -133,25 +120,18 @@
       if (tempo <= 0) {
         clearInterval(timer);
         jogoAtivo = false;
-        alert(`DONW foi abusado!\n vc matou: ${score}\noxente foi na fase : ${fase}`);
+        alert("⏰ Fim de jogo!\nSua pontuação foi: " + score);
+        alert(`DownTomouumasurra🥀 \nDonw matou pessoas: ${score}\nVocê chegou na fase: ${fase}`);
       }
     }
 
-    // Quando as duas imagens estiverem carregadas, começa o jogo
-    let imagensCarregadas = 0;
-    function imagemCarregou() {
-      imagensCarregadas++;
-      if (imagensCarregadas === 2) {
-        gerarPessoas();
-        desenhar();
-        timer = setInterval(atualizarTempo, 1000);
-      }
-    }
-    imagemPessoa.onload = imagemCarregou;
- donw.png.onload = imagemCarregou;
+    imagemPessoa.onload = () => {
+      gerarPessoas();
+      desenharPessoas();
+      timer = setInterval(atualizarTempo, 1000);
+    };
 
+    const timer = setInterval(atualizarTempo, 1000);
   </script>
 </body>
 </html>
-
-
