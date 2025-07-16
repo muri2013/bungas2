@@ -1,122 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>FlapBird</title>
+  <meta charset="UTF-8" />
+  <title>Jdonw the game</title>
   <style>
     body {
       margin: 0;
-      overflow: hidden;
-      background-color: #70c5ce;
+      background: #222;
+      color: purple;
       font-family: sans-serif;
+      text-align: center;
     }
+
     canvas {
       display: block;
-      margin: auto;
-      background: #70c5ce;
+      margin: 20px auto;
+      background: #87ceeb;
+      border: 3px solid white;
     }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="320" height="480"></canvas>
+  <h1>Pontuação: <span id="score">0</span></h1>
+  <canvas id="game" width="600" height="400"></canvas>
 
   <script>
-    const canvas = document.getElementById("gameCanvas");
+    const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
 
-    let frames = 0;
-    const gravity = 0.25;
-    const jump = 4.6;
+    let score = 0;
+    const numPessoas = 5;
+    const pessoas = [];
+    const imagemPessoa = new Image();
+    imagemPessoa.src = "pessoa.png";
 
-    const bird = {
-      x: 50,
-      y: 150,
-      width: 34,
-      height: 24,
-      velocity: 0,
-      draw() {
-        ctx.fillStyle = "yellow";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-      },
-      update() {
-        this.velocity += gravity;
-        this.y += this.velocity;
-
-        if (this.y + this.height >= canvas.height) {
-          this.y = canvas.height - this.height;
-          this.velocity = 0;
-        }
-      },
-      flap() {
-        this.velocity = -jump;
+    function gerarPessoas() {
+      pessoas.length = 0;
+      for (let i = 0; i < numPessoas; i++) {
+        pessoas.push({
+          x: Math.random() * (canvas.width - 60),
+          y: Math.random() * (canvas.height - 60),
+          size: 60
+        });
       }
-    };
-
-    const pipes = {
-      list: [],
-      width: 52,
-      height: 300,
-      gap: 100,
-      frameInterval: 90,
-      update() {
-        if (frames % this.frameInterval === 0) {
-          const topHeight = Math.floor(Math.random() * 200) + 50;
-          this.list.push({
-            x: canvas.width,
-            top: topHeight,
-            bottom: topHeight + this.gap
-          });
-        }
-
-        for (let i = 0; i < this.list.length; i++) {
-          const p = this.list[i];
-          p.x -= 2;
-
-          // colisão
-          if (
-            bird.x < p.x + this.width &&
-            bird.x + bird.width > p.x &&
-            (bird.y < p.top || bird.y + bird.height > p.bottom)
-          ) {
-            alert("Game Over!");
-            document.location.reload();
-          }
-
-          // remove canos fora da tela
-          if (p.x + this.width < 0) {
-            this.list.shift();
-          }
-        }
-      },
-      draw() {
-        ctx.fillStyle = "green";
-        for (let i = 0; i < this.list.length; i++) {
-          const p = this.list[i];
-          ctx.fillRect(p.x, 0, this.width, p.top);
-          ctx.fillRect(p.x, p.bottom, this.width, canvas.height - p.bottom);
-        }
-      }
-    };
-
-    function loop() {
-      frames++;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      bird.update();
-      pipes.update();
-
-      bird.draw();
-      pipes.draw();
-
-      requestAnimationFrame(loop);
     }
 
-    document.addEventListener("keydown", function (e) {
-      if (e.code === "Space") bird.flap();
+    function desenharPessoas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let p of pessoas) {
+        ctx.drawImage(imagemPessoa, p.x, p.y, p.size, p.size);
+      }
+    }
+
+    canvas.addEventListener("click", function(e) {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      for (let i = 0; i < pessoas.length; i++) {
+        const p = pessoas[i];
+        if (
+          x >= p.x &&
+          x <= p.x + p.size &&
+          y >= p.y &&
+          y <= p.y + p.size
+        ) {
+          score++;
+          scoreEl.textContent = score;
+          pessoas.splice(i, 1); // remove a pessoa clicada
+          break;
+        }
+      }
+
+      if (pessoas.length === 0) {
+        gerarPessoas();
+      }
+
+      desenharPessoas();
     });
 
-    loop();
+    // espera carregar a imagem pra desenhar
+    imagemPessoa.onload = () => {
+      gerarPessoas();
+      desenharPessoas();
+    };
   </script>
 </body>
 </html>
