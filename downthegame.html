@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Jogo das Pessoas com Tempo</title>
+  <title>Jogo das Pessoas com Fases</title>
   <style>
     body {
       margin: 0;
@@ -19,14 +19,15 @@
       border: 3px solid white;
     }
 
-    h1, h2 {
+    h1, h2, h3 {
       margin: 10px;
     }
   </style>
 </head>
 <body>
   <h1>Pontuação: <span id="score">0</span></h1>
-  <h2>Tempo: <span id="tempo">30</span>s</h2>
+  <h2>Tempo: <span id="tempo">20</span>s</h2>
+  <h3>Fase: <span id="fase">1</span></h3>
 
   <canvas id="game" width="600" height="400"></canvas>
 
@@ -35,16 +36,19 @@
     const ctx = canvas.getContext("2d");
     const scoreEl = document.getElementById("score");
     const tempoEl = document.getElementById("tempo");
+    const faseEl = document.getElementById("fase");
 
     let score = 0;
-    let tempo = 30; // Tempo inicial em segundos
-    const numPessoas = 5;
+    let fase = 1;
+    let tempo = 20; // tempo inicial
+    let numPessoas = 5;
     const pessoas = [];
 
     const imagemPessoa = new Image();
-    imagemPessoa.src = "pessoa.png"; // coloca essa imagem na mesma pasta do index.html
+    imagemPessoa.src = "pessoa.png";
 
     let jogoAtivo = true;
+    let timer;
 
     function gerarPessoas() {
       pessoas.length = 0;
@@ -81,12 +85,20 @@
         ) {
           score++;
           scoreEl.textContent = score;
-          pessoas.splice(i, 1); // remove a pessoa clicada
+          pessoas.splice(i, 1);
           break;
         }
       }
 
       if (pessoas.length === 0) {
+        fase++;
+        faseEl.textContent = fase;
+
+        numPessoas += 2;
+
+        tempo = 20; // reseta o tempo pra 20 segundos
+        tempoEl.textContent = tempo;
+
         gerarPessoas();
       }
 
@@ -94,23 +106,25 @@
     });
 
     function atualizarTempo() {
+      if (!jogoAtivo) return;
+
       tempo--;
       tempoEl.textContent = tempo;
 
       if (tempo <= 0) {
         clearInterval(timer);
         jogoAtivo = false;
-        alert("⏰ Fim de jogo!\nSua pontuação foi: " + score);
+        alert(`DownTomouumasurra🥀 \nDonw matou pessoas: ${score}\nVocê chegou na fase: ${fase}`);
       }
     }
 
     imagemPessoa.onload = () => {
       gerarPessoas();
       desenharPessoas();
+      timer = setInterval(atualizarTempo, 1000);
     };
-
-    const timer = setInterval(atualizarTempo, 1000);
   </script>
 </body>
 </html>
+
 
