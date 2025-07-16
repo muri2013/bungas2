@@ -2,12 +2,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Down Fighter Maneiro</title>
+  <title>downgame</title>
   <style>
     body {
       margin: 0;
       background: #222;
-      color: white;
+      color: purple;
       font-family: sans-serif;
       text-align: center;
     }
@@ -19,7 +19,6 @@
       border: 3px solid white;
     }
 
-    h1, h2 {
     h1, h2, h3 {
       margin: 10px;
     }
@@ -27,7 +26,6 @@
 </head>
 <body>
   <h1>Pontuação: <span id="score">0</span></h1>
-  <h2>Tempo: <span id="tempo">30</span>s</h2>
   <h2>Tempo: <span id="tempo">20</span>s</h2>
   <h3>Fase: <span id="fase">1</span></h3>
 
@@ -41,15 +39,12 @@
     const faseEl = document.getElementById("fase");
 
     let score = 0;
-    let tempo = 30; // Tempo inicial em segundos
-    const numPessoas = 5;
     let fase = 1;
     let tempo = 20; // tempo inicial
     let numPessoas = 5;
     const pessoas = [];
 
     const imagemPessoa = new Image();
-    imagemPessoa.src = "pessoa.png"; // coloca essa imagem na mesma pasta do index.html
     imagemPessoa.src = "pessoa.png";
 
     let jogoAtivo = true;
@@ -90,7 +85,6 @@
         ) {
           score++;
           scoreEl.textContent = score;
-          pessoas.splice(i, 1); // remove a pessoa clicada
           pessoas.splice(i, 1);
           break;
         }
@@ -120,8 +114,7 @@
       if (tempo <= 0) {
         clearInterval(timer);
         jogoAtivo = false;
-        alert("⏰ Fim de jogo!\nSua pontuação foi: " + score);
-        alert(`DownTomouumasurra🥀 \nDonw matou pessoas: ${score}\nVocê chegou na fase: ${fase}`);
+        alert(`donw foi abusado!\ncorpos abusados: ${score}\noxente tu foi na : ${fase}`);
       }
     }
 
@@ -130,8 +123,7 @@
       desenharPessoas();
       timer = setInterval(atualizarTempo, 1000);
     };
-
-    const timer = setInterval(atualizarTempo, 1000);
   </script>
 </body>
 </html>
+
