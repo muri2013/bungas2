@@ -2,12 +2,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Jdonw the game</title>
+  <title>Jogo das Pessoas com Tempo</title>
   <style>
     body {
       margin: 0;
       background: #222;
-      color: purple;
+      color: white;
       font-family: sans-serif;
       text-align: center;
     }
@@ -18,22 +18,33 @@
       background: #87ceeb;
       border: 3px solid white;
     }
+
+    h1, h2 {
+      margin: 10px;
+    }
   </style>
 </head>
 <body>
   <h1>Pontuação: <span id="score">0</span></h1>
+  <h2>Tempo: <span id="tempo">30</span>s</h2>
+
   <canvas id="game" width="600" height="400"></canvas>
 
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     const scoreEl = document.getElementById("score");
+    const tempoEl = document.getElementById("tempo");
 
     let score = 0;
+    let tempo = 30; // Tempo inicial em segundos
     const numPessoas = 5;
     const pessoas = [];
+
     const imagemPessoa = new Image();
-    imagemPessoa.src = "pessoa.png";
+    imagemPessoa.src = "pessoa.png"; // coloca essa imagem na mesma pasta do index.html
+
+    let jogoAtivo = true;
 
     function gerarPessoas() {
       pessoas.length = 0;
@@ -54,6 +65,8 @@
     }
 
     canvas.addEventListener("click", function(e) {
+      if (!jogoAtivo) return;
+
       const rect = canvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -80,13 +93,24 @@
       desenharPessoas();
     });
 
-    // espera carregar a imagem pra desenhar
+    function atualizarTempo() {
+      tempo--;
+      tempoEl.textContent = tempo;
+
+      if (tempo <= 0) {
+        clearInterval(timer);
+        jogoAtivo = false;
+        alert("⏰ Fim de jogo!\nSua pontuação foi: " + score);
+      }
+    }
+
     imagemPessoa.onload = () => {
       gerarPessoas();
       desenharPessoas();
     };
+
+    const timer = setInterval(atualizarTempo, 1000);
   </script>
 </body>
 </html>
-
 
