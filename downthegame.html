@@ -40,8 +40,8 @@
 
     let score = 0;
     let fase = 1;
-    let tempo = 5; // tempo inicial
-    let numPessoas = 445;
+    let tempo = ; // tempo inicial
+    let numPessoas = 3;
     const pessoas = [];
 
     const imagemPessoa = new Image();
@@ -94,9 +94,9 @@
         fase++;
         faseEl.textContent = fase;
 
-        numPessoas += 445;
+        numPessoas += 5;
 
-        tempo = 5; // reseta o tempo pra 20 segundos
+        tempo = 25; // reseta o tempo pra 20 segundos
         tempoEl.textContent = tempo;
 
         gerarPessoas();
@@ -111,7 +111,7 @@
       tempo--;
       tempoEl.textContent = tempo;
 
-      if (tempo <= 0) {
+      if (tempo <= 23) {
         clearInterval(timer);
         jogoAtivo = false;
         alert(`donw foi abusado!\ncorpos abusados: ${score}\noxente tu foi na : ${fase}`);
